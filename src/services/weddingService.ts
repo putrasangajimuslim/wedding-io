@@ -5,12 +5,17 @@ import Cookies from 'js-cookie';
 
 const API_BASE_URL = 'http://localhost:4000/api';
 
-const getAuthHeader = () => {
+// Menambahkan anotasi tipe data ': Record<string, string>' agar dikenali oleh HeadersInit bawaan fetch
+const getAuthHeader = (): Record<string, string> => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
   // 1. Ambil cookie terenkripsi "auth"
   const encryptedAuth = Cookies.get("auth");
   
   if (!encryptedAuth) {
-    return { 'Content-Type': 'application/json' };
+    return headers;
   }
 
   try {
@@ -18,13 +23,14 @@ const getAuthHeader = () => {
     const decryptedData = decryptData(encryptedAuth);
     const token = decryptedData?.token; // Ambil properti token
 
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` // Kirim token asli ke backend Go
-    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; // Kirim token asli ke backend Go
+    }
+    
+    return headers;
   } catch (error) {
     console.error("Gagal mendeskripsi token auth:", error);
-    return { 'Content-Type': 'application/json' };
+    return headers;
   }
 };
 
@@ -63,7 +69,7 @@ export const AgendaService = {
     try {
       const response = await fetch(`${API_BASE_URL}/agenda/delete-multiple`, {
         method: 'POST',
-        headers: getAuthHeader(), // Pastikan fungsi getAuthHeader() tersedia di file service Anda
+        headers: getAuthHeader(),
         body: JSON.stringify({ ids: ids }),
       });
       return await response.json();

@@ -10,7 +10,6 @@ import {
 import { PlanService } from '@/services/planService';
 import { TaskData } from '@/models/task';
 
-// Definisikan limit data per halaman sesuai setelan default backend
 const ITEMS_PER_PAGE = 5;
 
 export default function PlanPage() {
@@ -19,7 +18,6 @@ export default function PlanPage() {
   const [tasks, setTasks] = useState<TaskData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // State Pagination & Metadata yang disinkronkan langsung dari Response Backend
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
@@ -27,12 +25,10 @@ export default function PlanPage() {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Ambil data dari Backend berdasarkan Page & Search Query yang aktif
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Memanggil service dengan membawa parameter pagination dan pencarian
         const response = await PlanService.getPlanList({
           page: currentPage,
           limit: ITEMS_PER_PAGE,
@@ -42,7 +38,6 @@ export default function PlanPage() {
         if (response.success && response.data) {
           setTasks(response.data);
           
-          // Petakan metadata pagination dari backend ke state komponen
           if (response.pagination) {
             setTotalPages(response.pagination.total_pages || 1);
             setTotalRows(response.pagination.total_rows || 0);
@@ -62,7 +57,6 @@ export default function PlanPage() {
       }
     };
 
-    // Mekanisme debounce: beri jeda 300ms saat mengetik agar tidak membombardir server backend
     const delayDebounceFn = setTimeout(() => {
       fetchData();
     }, searchQuery ? 300 : 0);
@@ -70,7 +64,6 @@ export default function PlanPage() {
     return () => clearTimeout(delayDebounceFn);
   }, [currentPage, searchQuery]);
 
-  // Reset halaman ke hlm 1 setiap kali user mengetik pencarian baru
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
@@ -90,7 +83,6 @@ export default function PlanPage() {
     }
   };
 
-  // Logic Selection (Berlaku untuk ID data yang ada di halaman aktif saat ini saja)
   const toggleSelectAll = () => {
     if (tasks.length === 0) return;
     
@@ -110,15 +102,11 @@ export default function PlanPage() {
     );
   };
 
-  // Integrasi Hapus Data Massal
   const deleteSelected = async () => {
     if (confirm(`Hapus ${selectedTasks.length} tugas terpilih?`)) {
       try {
-        // TODO: Jalankan looping/endpoint delete ke backend, contoh:
-        // await PlanService.deleteBulkPlans(selectedTasks);
-        
+        // Ex: await PlanService.deleteBulkPlans(selectedTasks);
         setSelectedTasks([]);
-        // Muat ulang halaman pertama atau kurangi halaman jika data di halaman terakhir habis
         if (tasks.length === selectedTasks.length && currentPage > 1) {
           setCurrentPage(prev => prev - 1);
         } else {
@@ -130,13 +118,9 @@ export default function PlanPage() {
     }
   };
 
-  // Integrasi Update Status ke Backend
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
-      // Optimistic UI update di lokal dulu
       setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
-      
-      // Panggil API patch/put ke backend Golang
       await PlanService.updatePlanStatus(id, newStatus);
     } catch (error) {
       console.error("Gagal memperbarui status di server:", error);
@@ -160,7 +144,6 @@ export default function PlanPage() {
     return { formattedDate, isOverdue };
   };
 
-  // Cek apakah semua item di halaman saat ini sudah dicentang
   const isCurrentPageAllSelected = tasks.length > 0 && tasks.map(t => t.id).every(id => id && selectedTasks.includes(id));
 
   return (
@@ -262,21 +245,25 @@ export default function PlanPage() {
                   ) : (
                     tasks.map((task) => {
                       if (!task.id) return null;
+                      
+                      // Solusi Utama: Definisikan sebagai variabel konstan bertipe murni 'number'
+                      const safeTaskId: number = task.id; 
+                      
                       const { formattedDate, isOverdue } = formatDateAndCheckOverdue(task.deadline, task.status || '');
                       
                       return (
-                        <tr key={task.id} className="hover:bg-pink-50/10 transition-colors">
+                        <tr key={safeTaskId} className="hover:bg-pink-50/10 transition-colors">
                           <td className="p-4 text-center">
                             <input 
                               type="checkbox" 
                               className="rounded border-gray-300 text-pink-500 focus:ring-pink-500"
-                              checked={selectedTasks.includes(task.id)}
-                              onChange={() => toggleSelectTask(task.id)}
+                              checked={selectedTasks.includes(safeTaskId)}
+                              onChange={() => toggleSelectTask(safeTaskId)}
                             />
                           </td>
                           <td className="p-4">
                             <span className={`text-sm font-medium ${task.status === 'Completed' ? 'line-through text-gray-400' : 'text-gray-700'}`}>
-                              {task.title || task.task_name || '-'}
+                              {task.task_name || '-'}
                             </span>
                           </td>
                           <td className="p-4 text-xs text-gray-500">{task.category || '-'}</td>
@@ -293,7 +280,7 @@ export default function PlanPage() {
                           <td className="p-4">
                             <select
                               value={task.status || 'Pending'}
-                              onChange={(e) => handleStatusChange(task.id!, e.target.value)}
+                              onChange={(e) => handleStatusChange(safeTaskId, e.target.value)}
                               className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border-0 outline-none cursor-pointer tracking-wider focus:ring-2 focus:ring-pink-200 ${
                                 task.status === 'Completed' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'
                               }`}
@@ -305,7 +292,7 @@ export default function PlanPage() {
                           <td className="p-4 text-right">
                             <div className="flex justify-end gap-1.5">
                               <button 
-                                onClick={() => handleRedirectToEdit(task.id!)}
+                                onClick={() => handleRedirectToEdit(safeTaskId)}
                                 className="p-1.5 text-gray-400 hover:text-pink-500 rounded-lg hover:bg-gray-50 transition-colors" 
                                 title="Edit Tugas"
                               >
@@ -315,8 +302,7 @@ export default function PlanPage() {
                                 className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-gray-50 transition-colors" 
                                 onClick={() => {
                                   if(confirm("Hapus tugas ini?")) {
-                                    setTasks(prev => prev.filter(t => t.id !== task.id));
-                                    // Mengurangi total rows lokal secara manual jika dihapus dari sisi client
+                                    setTasks(prev => prev.filter(t => t.id !== safeTaskId));
                                     setTotalRows(prev => Math.max(0, prev - 1));
                                   }
                                 }} 

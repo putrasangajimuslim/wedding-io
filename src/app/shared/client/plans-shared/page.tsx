@@ -26,7 +26,7 @@ export default function PlansSharedPage({ initialData }: PlansSharedPageProps) {
   const [showAttention, setShowAttention] = useState(false);
 
   // Form States (Diinisialisasi langsung dari initialData)
-  const [title, setTitle] = useState(initialData?.title || '');
+  const [title, setTitle] = useState(initialData?.task_name || '');
   const [category, setCategory] = useState(initialData?.category || '');
   const [deadline, setDeadline] = useState(initialData?.deadline || '');
   const [notes, setNotes] = useState(initialData?.notes || '');
@@ -34,7 +34,7 @@ export default function PlansSharedPage({ initialData }: PlansSharedPageProps) {
   // Efek pendukung jika sewaktu-waktu initialData berubah dari sisi parent
   useEffect(() => {
     if (initialData) {
-      setTitle(initialData.title);
+      setTitle(initialData.task_name);
       setCategory(initialData.category);
       setDeadline(initialData.deadline);
       setNotes(initialData.notes || '');
@@ -51,7 +51,7 @@ export default function PlansSharedPage({ initialData }: PlansSharedPageProps) {
     setIsLoading(true);
 
     const taskData: TaskData = {
-      title: title.trim(),
+      task_name: title.trim(),
       category,
       deadline,
       notes: notes.trim(),
