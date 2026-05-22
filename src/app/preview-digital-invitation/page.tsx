@@ -2019,7 +2019,7 @@ export default function HomePage() {
               {/* COUPLE */}
               <button
                 onClick={() =>
-                  scrollToSection(coupleRef, 40)
+                  scrollToSection(coupleRef, 60)
                 }
                 className="flex flex-col cursor-pointer items-center text-[#9d7b46] transition hover:scale-110"
               >
@@ -2033,7 +2033,7 @@ export default function HomePage() {
               {/* GALLERY */}
               <button
                 onClick={() =>
-                  scrollToSection(galleryRef, 50)
+                  scrollToSection(galleryRef, 55)
                 }
                 className="flex flex-col cursor-pointer items-center text-[#9d7b46] transition hover:scale-110"
               >
@@ -2047,7 +2047,7 @@ export default function HomePage() {
               {/* EVENT */}
               <button
                 onClick={() =>
-                  scrollToSection(eventRef, 60)
+                  scrollToSection(eventRef, 40)
                 }
                 className="flex flex-col cursor-pointer items-center text-[#9d7b46] transition hover:scale-110"
               >
