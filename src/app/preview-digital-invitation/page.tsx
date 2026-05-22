@@ -410,22 +410,28 @@ export default function HomePage() {
                 <span>Of</span>
               </div>
 
-              {/* Nama Pengantin - Menggunakan font-cursive-lokal dengan ukuran sedang (perkecil dikit) */}
-              <h2 className="font-cursive-lokal text-5xl sm:text-6xl md:text-7xl lg:text-6.5xl leading-[1.1] my-2 sm:my-4 w-full px-2 drop-shadow-sm select-none overflow-visible">
-                {/* Nama Erika */}
-                <span className="block capitalize efek-cahaya">
-                  Erika
-                </span>
+              {/* Nama Pengantin - Menggunakan flex-col agar tata letak terjaga lurus ke bawah */}
+              <h2 className="font-cursive-lokal text-5xl sm:text-6xl md:text-7xl lg:text-6.5xl leading-[1.1] my-2 sm:my-4 w-full px-2 drop-shadow-sm select-none overflow-visible flex flex-col items-center justify-center">
+                {/* Wadah Nama Erika */}
+                <div className="w-full block">
+                  <span className="capitalize efek-cahaya">
+                    Erika
+                  </span>
+                </div>
                 
-                {/* Simbol & */}
-                <span className="font-serif block text-2xl sm:text-3xl md:text-4xl lg:text-3xl my-1 font-light text-[#9d7b46]">
-                  &
-                </span>
+                {/* Wadah Simbol & */}
+                <div className="w-full block">
+                  <span className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-3xl my-1 font-light efek-cahaya">
+                    &
+                  </span>
+                </div>
                 
-                {/* Nama Yogi */}
-                <span className="block capitalize efek-cahaya">
-                  Yogi
-                </span>
+                {/* Wadah Nama Yogi */}
+                <div className="w-full block">
+                  <span className="capitalize efek-cahaya">
+                    Yogi
+                  </span>
+                </div>
               </h2>
 
               {/* Garis Pembatas Halus */}
@@ -1187,20 +1193,26 @@ export default function HomePage() {
             </section>
 
             {/* ================= EVENT ================= */}
-            <section ref={eventRef} className="relative z-10 px-6 pt-24">
+            <section ref={eventRef} className="relative z-10 px-6 pt-24 pb-24 overflow-hidden bg-[#faf7f2]">
               <div className="mx-auto max-w-5xl">
-                {/* TITLE */}
-                <div className="text-center">
+                
+                {/* TITLE SECTION WITH FADE-IN ANIMATION */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="text-center"
+                >
                   <p className="text-sm uppercase tracking-[5px] text-[#b28a4a]">
                     Wedding Event
                   </p>
-
                   <h2 className="mt-4 font-cormorant text-5xl text-[#9d7b46]">
                     Save The Date
                   </h2>
-                </div>
+                </motion.div>
 
-                {/* EVENT LIST */}
+                {/* EVENT LIST GRID */}
                 <div
                   className={`mt-14 grid gap-6 ${
                     EVENTS.length === 1
@@ -1214,28 +1226,28 @@ export default function HomePage() {
                     return (
                       <motion.div
                         key={index}
-                        initial={{ opacity: 0, rotateY: -90 }}
-                        whileInView={{ opacity: 1, rotateY: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
+                        // Animasi saat kartu pertama kali masuk ke viewport script (Slide-in & Fade)
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{
-                          duration: 1,
+                          duration: 0.8,
                           delay: index * 0.2,
                           ease: [0.22, 1, 0.36, 1],
                         }}
                         style={{
-                          transformStyle: "preserve-3d",
-                          perspective: 2000,
+                          perspective: 2000, // Menghasilkan efek 3D kedalaman saat di-flip
                         }}
                         className="relative h-[560px]"
                       >
-                        {/* FLIP CARD */}
+                        {/* FLIP CARD INNER WRAPPER */}
                         <motion.div
                           animate={{
                             rotateY: isFlipped ? 180 : 0,
                           }}
                           transition={{
-                            duration: 0.9,
-                            ease: [0.22, 1, 0.36, 1],
+                            duration: 0.8,
+                            ease: [0.4, 0, 0.2, 1], // Smooth easing untuk rotasi kartu
                           }}
                           style={{
                             transformStyle: "preserve-3d",
@@ -1243,21 +1255,31 @@ export default function HomePage() {
                           className="relative h-full w-full cursor-pointer"
                           onClick={() => toggleFlip(index)}
                         >
-                          {/* FRONT CARD */}
+                          
+                          {/* ========================================================
+                              FRONT CARD 
+                              ======================================================== */}
                           <div
                             style={{
                               backfaceVisibility: "hidden",
                             }}
-                            className="absolute inset-0 overflow-hidden rounded-[35px] shadow-[0_20px_80px_rgba(0,0,0,0.08)]"
+                            className="absolute inset-0 overflow-hidden rounded-[35px] shadow-[0_20px_80px_rgba(0,0,0,0.05)] bg-white"
                           >
-                            {/* BACKGROUND */}
-                            <Image
-                              src="/images/walpaper6.jpg"
-                              alt="Wedding Background"
-                              fill
-                              quality={100}
-                              className="object-cover opacity-20 transition-transform duration-[4000ms]"
-                            />
+                            {/* BACKGROUND IMAGE WITH KEN BURNS ANIMATION EFFECT */}
+                            <motion.div 
+                              initial={{ scale: 1.1 }}
+                              whileInView={{ scale: 1 }}
+                              transition={{ duration: 3 }}
+                              className="absolute inset-0"
+                            >
+                              <Image
+                                src="/images/walpaper6.jpg"
+                                alt="Wedding Background"
+                                fill
+                                quality={100}
+                                className="object-cover opacity-20"
+                              />
+                            </motion.div>
 
                             {/* OVERLAY */}
                             <div className="absolute inset-0 bg-white/65 backdrop-blur-[1px]" />
@@ -1265,14 +1287,14 @@ export default function HomePage() {
                             {/* BORDER */}
                             <div className="absolute inset-0 rounded-[35px] border border-white/20" />
 
-                            {/* FLOWER TOP LEFT */}
+                            {/* FLOWER TOP LEFT ANIMATION */}
                             <motion.div
                               animate={{
-                                y: [0, -8, 0],
-                                rotate: [0, 2, 0],
+                                y: [0, -6, 0],
+                                rotate: [0, 3, 0],
                               }}
                               transition={{
-                                duration: 6,
+                                duration: 5,
                                 repeat: Infinity,
                                 ease: "easeInOut",
                               }}
@@ -1288,14 +1310,14 @@ export default function HomePage() {
                               />
                             </motion.div>
 
-                            {/* FLOWER BOTTOM RIGHT */}
+                            {/* FLOWER BOTTOM RIGHT ANIMATION */}
                             <motion.div
                               animate={{
-                                y: [0, 8, 0],
-                                rotate: [0, -2, 0],
+                                y: [0, 6, 0],
+                                rotate: [0, -3, 0],
                               }}
                               transition={{
-                                duration: 7,
+                                duration: 5.5,
                                 repeat: Infinity,
                                 ease: "easeInOut",
                               }}
@@ -1311,67 +1333,66 @@ export default function HomePage() {
                               />
                             </motion.div>
 
-                            {/* CONTENT */}
+                            {/* FRONT CONTENT */}
                             <div className="relative z-20 flex h-full flex-col items-center justify-center p-10 text-center">
-                              {/* ICON */}
+                              
+                              {/* CALENDAR ICON PULSE ANIMATION */}
                               <motion.div
                                 animate={{
                                   scale: [1, 1.05, 1],
                                 }}
                                 transition={{
-                                  duration: 4,
+                                  duration: 3,
                                   repeat: Infinity,
                                   ease: "easeInOut",
                                 }}
                                 className="flex h-20 w-20 items-center justify-center rounded-full border border-white/30 bg-white/30 shadow-lg backdrop-blur-md"
                               >
-                                <Calendar
-                                  size={38}
-                                  className="text-[#9d7b46]"
-                                />
+                                <Calendar size={38} className="text-[#9d7b46]" />
                               </motion.div>
 
-                              {/* TITLE */}
+                              {/* DETAILS */}
                               <h3 className="mt-7 font-cormorant text-5xl text-[#8a6836]">
                                 {event.title}
                               </h3>
 
-                              {/* DATE */}
                               <p className="mt-6 leading-8 text-[#5f4d32]">
                                 {event.date}
                                 <br />
                                 {event.time}
                               </p>
 
-                              {/* LOCATION */}
                               <div className="mt-6 flex items-center justify-center gap-2 text-[#8a6836]">
                                 <MapPin size={18} />
                                 <span>{event.location}</span>
                               </div>
 
-                              {/* CLICK TEXT */}
+                              {/* TEXT FLICKER/BLINKING ANIMATION */}
                               <motion.p
                                 animate={{
-                                  opacity: [0.5, 1, 0.5],
+                                  opacity: [0.4, 1, 0.4],
                                 }}
                                 transition={{
                                   duration: 2,
                                   repeat: Infinity,
+                                  ease: "easeInOut",
                                 }}
-                                className="mt-8 text-xs tracking-[4px] text-[#9d7b46]"
+                                className="mt-8 text-xs tracking-[4px] text-[#9d7b46] font-medium"
                               >
                                 CLICK TO FLIP
                               </motion.p>
                             </div>
                           </div>
 
-                          {/* BACK CARD */}
+                          {/* ========================================================
+                              BACK CARD 
+                              ======================================================== */}
                           <div
                             style={{
                               transform: "rotateY(180deg)",
                               backfaceVisibility: "hidden",
                             }}
-                            className="absolute inset-0 overflow-hidden rounded-[35px] bg-[#f8f3ea] shadow-[0_20px_80px_rgba(0,0,0,0.08)]"
+                            className="absolute inset-0 overflow-hidden rounded-[35px] bg-[#f8f3ea] shadow-[0_20px_80px_rgba(0,0,0,0.05)]"
                           >
                             {/* BACKGROUND */}
                             <Image
@@ -1385,7 +1406,7 @@ export default function HomePage() {
                             {/* OVERLAY */}
                             <div className="absolute inset-0 bg-[#fffaf3]/90 backdrop-blur-sm" />
 
-                            {/* FLOWER */}
+                            {/* CORNER FLOWERS (STATIC / SUBTLE) */}
                             <div className="absolute left-0 top-0">
                               <Image
                                 src="/images/icon3.png"
@@ -1393,7 +1414,7 @@ export default function HomePage() {
                                 width={80}
                                 height={80}
                                 quality={100}
-                                className="opacity-90"
+                                className="opacity-80"
                               />
                             </div>
 
@@ -1404,13 +1425,14 @@ export default function HomePage() {
                                 width={80}
                                 height={80}
                                 quality={100}
-                                className="opacity-90"
+                                className="opacity-80"
                               />
                             </div>
 
-                            {/* CONTENT */}
-                            <div className="relative z-20 flex h-full flex-col items-center justify-center px-10 text-center">
-                              {/* TITLE */}
+                            {/* BACK CONTENT */}
+                            <div className="relative z-20 flex h-full flex-col items-center justify-center px-10 text-center" 
+                                onClick={(e) => isFlipped && e.stopPropagation()} // Supaya klik tombol maps tidak men-flip kartu kembali ke depan
+                            >
                               <h3 className="font-cormorant text-5xl text-[#9d7b46]">
                                 {event.title}
                               </h3>
@@ -1419,25 +1441,20 @@ export default function HomePage() {
 
                               {/* HOUSE ICON */}
                               <div className="mt-8 flex h-20 w-20 items-center justify-center rounded-full border border-[#d8b57a]/40 bg-white/70 shadow-lg backdrop-blur-sm">
-                                <Home
-                                  size={34}
-                                  className="text-[#9d7b46]"
-                                />
+                                <Home size={34} className="text-[#9d7b46]" />
                               </div>
 
-                              {/* FAMILY TITLE */}
                               <h4 className="mt-5 font-cormorant text-3xl text-[#8a6836]">
                                 {event.title === "Akad Nikah"
                                   ? "Mempelai Wanita"
                                   : "Mempelai Pria"}
                               </h4>
 
-                              {/* ADDRESS */}
                               <p className="mt-4 max-w-md leading-8 text-[#6b5738]">
                                 {event.address}
                               </p>
 
-                              {/* BUTTON */}
+                              {/* BUTTON GOOGLE MAPS WITH HOVER & CLICK ANIMATION */}
                               {event.mapUrl && (
                                 <a
                                   href={event.mapUrl}
@@ -1446,13 +1463,9 @@ export default function HomePage() {
                                   className="inline-block"
                                 >
                                   <motion.button
-                                    whileHover={{
-                                      scale: 1.05,
-                                    }}
-                                    whileTap={{
-                                      scale: 0.96,
-                                    }}
-                                    className="mt-10 rounded-full bg-[#9d7b46] px-8 py-3 text-sm tracking-wide text-white shadow-lg transition-all duration-300 hover:bg-[#7c5c2f]"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.96 }}
+                                    className="mt-10 rounded-full bg-[#9d7b46] px-8 py-3 text-sm tracking-wide text-white shadow-lg transition-colors duration-300 hover:bg-[#7c5c2f]"
                                   >
                                     Lihat Lokasi
                                   </motion.button>
@@ -1460,6 +1473,7 @@ export default function HomePage() {
                               )}
                             </div>
                           </div>
+
                         </motion.div>
                       </motion.div>
                     );
