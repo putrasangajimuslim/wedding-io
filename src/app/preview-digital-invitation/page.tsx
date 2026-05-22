@@ -29,6 +29,7 @@ export default function HomePage() {
 
   const contentRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
 
   // SECTION REFS
   const coupleRef = useRef<HTMLDivElement>(null);
@@ -276,7 +277,10 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative h-screen overflow-y-auto scroll-smooth bg-[#f6f1ea]">
+    <main
+      ref={mainRef}
+      className="relative h-screen overflow-y-auto scroll-smooth bg-[#f6f1ea]"
+    >
       {/* ================= AUDIO ================= */}
       <audio
         ref={audioRef}
@@ -486,7 +490,7 @@ export default function HomePage() {
             />
 
             {/* ================= WEDDING CHAPTER ================= */}
-            <section className="relative z-10 px-4 pt-20 md:px-6">
+            <section className="relative z-10 px-4 pt-10 md:px-6 md:pt-14">
               <div className="mx-auto max-w-4xl">
                 {/* Card Utama dengan efek Zoom-In */}
                 <motion.div
@@ -579,8 +583,7 @@ export default function HomePage() {
 
             {/* ================= THE BRIDE & GROOM + LOVE STORY ================= */}
             <section
-              ref={coupleRef}
-              className="relative z-10 px-4 pt-20"
+              className="relative z-10 px-4 pt-10 md:pt-14"
             >
               <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_0.85fr]">
                 {/* ================= BRIDE & GROOM ================= */}
@@ -617,7 +620,10 @@ export default function HomePage() {
                   </div>
 
                   <div className="relative z-20 px-5 py-10 md:px-8 md:py-12">
-                    <div className="text-center">
+                    <div
+                      ref={coupleRef}
+                      className="scroll-mt-24 text-center"
+                    >
                       <p className="text-[10px] uppercase tracking-[5px] text-[#b28a4a]">
                         The Wedding Of
                       </p>
@@ -914,7 +920,7 @@ export default function HomePage() {
             </section>
             
             {/* ================= COUNTDOWN ================= */}
-            <section className="relative z-10 py-12">
+             <section className="relative z-10 py-8 md:py-10">
               {/* FULL IMAGE */}
               <div className="relative mx-auto h-[500px] w-full overflow-hidden">
                 <Image
@@ -978,11 +984,15 @@ export default function HomePage() {
 
             {/* ================= GALLERY ================= */}
             <section
-              ref={galleryRef}
-              className="relative z-10 overflow-hidden px-6 pt-10"
+              className="relative z-10 overflow-hidden px-6 pt-6 md:pt-10"
             >
               {/* BACKGROUND GLOW */}
               <div className="absolute left-1/2 top-20 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-[#d8b57a]/10 blur-3xl" />
+
+              <div
+                ref={galleryRef}
+                className="h-0 scroll-mt-24"
+              />
 
               <div className="relative mx-auto max-w-6xl">
                 
@@ -1193,7 +1203,13 @@ export default function HomePage() {
             </section>
 
             {/* ================= EVENT ================= */}
-            <section ref={eventRef} className="relative z-10 px-6 pt-24 pb-24 overflow-hidden bg-[#faf7f2]">
+            <section
+              className="relative z-10 overflow-hidden bg-[#faf7f2] px-6 pt-12 pb-14 md:pt-16 md:pb-16"
+            >
+              <div
+                ref={eventRef}
+                className="h-0 scroll-mt-24"
+              />
               <div className="mx-auto max-w-5xl">
                 
                 {/* TITLE SECTION WITH FADE-IN ANIMATION */}
@@ -1483,7 +1499,7 @@ export default function HomePage() {
             </section>
 
             {/* ================= WEDDING GIFT ================= */}
-            <section className="relative z-10 px-6 pt-24">
+            <section className="relative z-10 px-6 pt-14 md:pt-16">
               <div className="mx-auto max-w-6xl">
                 {/* TITLE */}
                 <div className="text-center">
@@ -1665,7 +1681,7 @@ export default function HomePage() {
             </section>
 
             {/* ================= UCAPAN & DOA ================= */}
-            <section className="relative z-10 px-6 pt-24">
+            <section className="relative z-10 px-6 pt-14 md:pt-16">
               <div className="mx-auto max-w-4xl">
                 {/* TITLE */}
                 <div className="text-center">
