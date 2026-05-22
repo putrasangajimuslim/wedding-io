@@ -156,11 +156,27 @@ export default function HomePage() {
 
   // ================= SCROLL =================
   const scrollToSection = (
-    ref: React.RefObject<HTMLDivElement | null>
+    ref: React.RefObject<HTMLDivElement | null>,
+    offset = 0
   ) => {
-    ref.current?.scrollIntoView({
+    if (!ref.current || !mainRef.current) return;
+
+    const container = mainRef.current;
+
+    const containerRect =
+      container.getBoundingClientRect();
+
+    const targetRect =
+      ref.current.getBoundingClientRect();
+
+    const scrollTop =
+      container.scrollTop +
+      (targetRect.top - containerRect.top) -
+      offset;
+
+    container.scrollTo({
+      top: scrollTop,
       behavior: "smooth",
-      block: "start",
     });
   };
 
@@ -2003,7 +2019,7 @@ export default function HomePage() {
               {/* COUPLE */}
               <button
                 onClick={() =>
-                  scrollToSection(coupleRef)
+                  scrollToSection(coupleRef, 40)
                 }
                 className="flex flex-col cursor-pointer items-center text-[#9d7b46] transition hover:scale-110"
               >
@@ -2017,7 +2033,7 @@ export default function HomePage() {
               {/* GALLERY */}
               <button
                 onClick={() =>
-                  scrollToSection(galleryRef)
+                  scrollToSection(galleryRef, 50)
                 }
                 className="flex flex-col cursor-pointer items-center text-[#9d7b46] transition hover:scale-110"
               >
@@ -2031,7 +2047,7 @@ export default function HomePage() {
               {/* EVENT */}
               <button
                 onClick={() =>
-                  scrollToSection(eventRef)
+                  scrollToSection(eventRef, 60)
                 }
                 className="flex flex-col cursor-pointer items-center text-[#9d7b46] transition hover:scale-110"
               >
