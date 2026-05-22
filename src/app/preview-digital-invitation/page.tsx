@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 
 import {
@@ -219,6 +219,39 @@ export default function HomePage() {
       label: "NOMOR REKENING",
     },
   ];
+
+  const weddingChapterText = "Wedding Chapter";
+  const journeyText = "A Journey Of Love & Happiness";
+  const paragraph1Text = "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak / Ibu / Saudara/i untuk hadir dalam acara pernikahan kami dan memberikan doa restu.";
+  const quranText = "“Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri.”";
+  const surahText = "QS. Ar-Rum : 21";
+
+  // Wadah utama yang mengatur jeda (stagger) antar kata secara berurutan
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Kecepatan urutan antar kata
+      },
+    },
+  };
+
+  // Solusi Mutlak: Mengunci tipe data menggunakan anotasi ": Variants" agar lolos next build
+  const wordVariants: Variants = {
+    hidden: { 
+      opacity: 0, 
+      y: 8 
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0, 0, 0.2, 1] 
+      },
+    },
+  };
 
   const toggleFlip = (index: number) => {
     setFlippedCards((prev) =>
@@ -449,10 +482,12 @@ export default function HomePage() {
             {/* ================= WEDDING CHAPTER ================= */}
             <section className="relative z-10 px-4 pt-20 md:px-6">
               <div className="mx-auto max-w-4xl">
+                {/* Card Utama dengan efek Zoom-In */}
                 <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.93, y: 30 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
                   className="relative overflow-hidden rounded-[38px] border border-[#e3d5be]/30 bg-white/80 px-6 py-12 shadow-[0_18px_60px_rgba(0,0,0,0.07)] backdrop-blur-xl md:px-10 md:py-14"
                 >
                   {/* Background */}
@@ -463,55 +498,75 @@ export default function HomePage() {
                     className="object-cover opacity-[0.04]"
                   />
 
-                  {/* Decorative Flower Top */}
+                  {/* Decorative Flowers */}
                   <div className="absolute -left-8 -top-8 h-24 w-24 opacity-50 md:h-28 md:w-28">
-                    <Image
-                      src="/images/icon3.png"
-                      alt="Flower"
-                      fill
-                      className="object-contain"
-                    />
+                    <Image src="/images/icon3.png" alt="Flower" fill className="object-contain" />
                   </div>
-
-                  {/* Decorative Flower Bottom */}
                   <div className="absolute -bottom-8 -right-8 h-24 w-24 opacity-50 md:h-28 md:w-28">
-                    <Image
-                      src="/images/icon3.png"
-                      alt="Flower"
-                      fill
-                      className="object-contain"
-                    />
+                    <Image src="/images/icon3.png" alt="Flower" fill className="object-contain" />
                   </div>
 
-                  {/* Content */}
-                  <div className="relative z-10 text-center">
-                    <p className="text-[11px] uppercase tracking-[5px] text-[#b28a4a] md:text-sm">
-                      Wedding Chapter
+                  {/* Content Container */}
+                  <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="relative z-10 text-center select-none"
+                  >
+                    
+                    {/* 1. Wedding Chapter */}
+                    <p className="text-[11px] uppercase tracking-[5px] text-[#b28a4a] md:text-sm flex flex-wrap justify-center gap-x-1.5">
+                      {weddingChapterText.split(" ").map((word, index) => (
+                        <motion.span variants={wordVariants} key={index}>
+                          {word}
+                        </motion.span>
+                      ))}
                     </p>
 
-                    <h2 className="mt-4 font-cormorant text-4xl leading-tight text-[#9d7b46] md:text-6xl">
-                      A Journey Of <br /> Love & Happiness
+                    {/* 2. A Journey Of Love & Happiness */}
+                    <h2 className="mt-4 font-cormorant text-4xl leading-tight text-[#9d7b46] md:text-6xl max-w-xl mx-auto flex flex-wrap justify-center gap-x-3">
+                      {journeyText.split(" ").map((word, index) => (
+                        <motion.span variants={wordVariants} key={index}>
+                          {word}
+                        </motion.span>
+                      ))}
                     </h2>
 
-                    <div className="mx-auto mt-8 h-px w-20 bg-[#d8b57a]" />
+                    {/* Garis Pembatas Emas */}
+                    <motion.div 
+                      variants={wordVariants}
+                      className="mx-auto mt-8 h-px w-20 bg-[#d8b57a]" 
+                    />
 
-                    <p className="mx-auto mt-8 max-w-2xl text-[15px] leading-8 text-[#6b5b3e] md:text-lg">
-                      Dengan memohon rahmat dan ridho Allah SWT,
-                      kami bermaksud mengundang Bapak / Ibu /
-                      Saudara/i untuk hadir dalam acara
-                      pernikahan kami dan memberikan doa restu.
+                    {/* 3. Paragraf Ajakan */}
+                    <p className="mx-auto mt-8 max-w-2xl text-[15px] leading-8 text-[#6b5b3e] md:text-lg flex flex-wrap justify-center gap-x-1.5 gap-y-1">
+                      {paragraph1Text.split(" ").map((word, index) => (
+                        <motion.span variants={wordVariants} key={index}>
+                          {word}
+                        </motion.span>
+                      ))}
                     </p>
 
-                    <p className="mx-auto mt-8 max-w-xl text-sm italic leading-7 text-[#8a7350] md:text-base">
-                      “Dan di antara tanda-tanda (kebesaran)-Nya ialah
-                      Dia menciptakan pasangan-pasangan untukmu dari
-                      jenismu sendiri.”
+                    {/* 4. Ayat Al-Quran */}
+                    <p className="mx-auto mt-8 max-w-xl text-sm italic leading-7 text-[#8a7350] md:text-base flex flex-wrap justify-center gap-x-1.5 gap-y-1">
+                      {quranText.split(" ").map((word, index) => (
+                        <motion.span variants={wordVariants} key={index}>
+                          {word}
+                        </motion.span>
+                      ))}
                     </p>
 
-                    <p className="mt-4 text-[11px] uppercase tracking-[4px] text-[#b28a4a] md:text-xs">
-                      QS. Ar-Rum : 21
+                    {/* 5. Nama Surah */}
+                    <p className="mt-4 text-[11px] uppercase tracking-[4px] text-[#b28a4a] md:text-xs flex flex-wrap justify-center gap-x-1">
+                      {surahText.split(" ").map((word, index) => (
+                        <motion.span variants={wordVariants} key={index}>
+                          {word}
+                        </motion.span>
+                      ))}
                     </p>
-                  </div>
+                    
+                  </motion.div>
                 </motion.div>
               </div>
             </section>
