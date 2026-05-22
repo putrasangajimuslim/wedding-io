@@ -308,70 +308,122 @@ export default function HomePage() {
 
           {/* RIGHT SIDEBAR */}
          <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f7f2eb] px-4 py-6 sm:px-6 lg:px-8">
-          {/* 1. Background Gambar dengan Warna Asli */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/images/walpaper10.png"
-              alt="Background"
-              fill
-              priority
-              className="object-cover"
-            />
-          </div>
+            {/* 1. Deklarasi Font Lokal & Efek Animasi Cahaya */}
+            <style dangerouslySetInnerHTML={{__html: `
+              /* Memanggil font yang sudah disimpan lokal di folder public/fonts/ */
+              @font-face {
+                font-family: 'Great Vibes Lokal';
+                src: url('/fonts/GreatVibes-Regular.ttf') format('truetype');
+                /* Catatan: Jika Anda menggunakan format woff2, ganti baris di atas menjadi: */
+                /* src: url('/fonts/GreatVibes.woff2') format('woff2'); */
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+              }
 
-          {/* 2. Bingkai Border Emas */}
-          <div className="absolute inset-4 sm:inset-6 md:inset-8 rounded-[24px] sm:rounded-[32px] md:rounded-[40px] border border-[#b28a4a]/40 z-10 pointer-events-none" />
+              /* Class untuk menerapkan font kustom */
+              .font-cursive-lokal {
+                font-family: 'Great Vibes Lokal', cursive;
+              }
 
-          {/* 3. Konten Utama */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="relative z-20 w-full max-w-sm mx-auto text-center flex flex-col items-center justify-center py-2 my-auto"
-          >
-            {/* "The Wedding Of" - Diperbesar di tablet(md), diperkecil sedikit di desktop(lg) */}
-            <div className="mb-2 sm:mb-4 lg:mb-2 flex flex-col items-center justify-center text-center font-serif text-[16px] sm:text-[18px] md:text-[24px] lg:text-[18px] text-[#9d7b46] font-medium leading-[1.3] tracking-wide">
-              <span>The</span>
-              <span>Wedding</span>
-              <span>Of</span>
-            </div>
-
-            {/* Nama Pengantin (Erika & Yogi) - Diperbesar signifikan di md, proporsional di lg */}
-            <h2 className="font-cursive text-3xl sm:text-4xl md:text-5xl lg:text-4.5xl text-[#9d7b46] leading-[1.1] my-1.5 sm:my-3 lg:my-2 w-full px-2 drop-shadow-sm">
-              <span className="block capitalize">Erika</span>
-              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-2xl my-0.5 font-light font-serif">&</span>
-              <span className="block capitalize">Yogi</span>
-            </h2>
-
-            {/* Garis Pembatas Halus */}
-            <div className="relative w-20 sm:w-24 md:w-32 lg:w-24 h-[1px] bg-gradient-to-r from-transparent via-[#b28a4a]/70 to-transparent my-2 sm:my-3 lg:my-2 flex items-center justify-center">
-              <div className="absolute w-1.5 h-1 bg-[#b28a4a]/80 rounded-full" />
-            </div>
-
-            {/* 4. Bagian Kepada Yth. & Nama Tamu */}
-            <div className="mt-2 sm:mt-3 lg:mt-2 mb-2 w-full px-4">
-              <p className="text-[12px] sm:text-[13px] md:text-[15px] lg:text-[13px] text-[#9d7b46] font-serif leading-relaxed">
-                Kepada Yth.
-              </p>
-              <p className="text-[11px] sm:text-[12px] md:text-[14px] lg:text-[12px] text-[#9d7b46]/90 font-serif leading-relaxed">
-                Bapak / Ibu / Saudara/i
-              </p>
+              /* Animasi kilauan cahaya berjalan dari kanan ke kiri secara lambat */
+              @keyframes cahayaKananKeKiri {
+                0% { background-position: 200% center; }
+                100% { background-position: -200% center; }
+              }
               
-              {/* Nama Tamu - Ekstra bold dan besar di layar md */}
-              <h3 className="mt-2 font-serif text-2xl sm:text-3xl md:text-4xl lg:text-3xl font-bold text-[#695027] tracking-wide break-words max-w-full px-2 leading-tight">
-                PutraSangaji
-              </h3>
+              .efek-cahaya {
+                background: linear-gradient(90deg, #9d7b46 0%, #9d7b46 40%, #ffffff 50%, #9d7b46 60%, #9d7b46 100%);
+                background-size: 200% auto;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: cahayaKananKeKiri 6s linear infinite;
+                
+                /* Mencegah ekor huruf cursive terpotong di browser */
+                padding-bottom: 0.2em; 
+                padding-top: 0.1em;
+                margin-bottom: -0.2em;
+                display: inline-block;
+                overflow: visible !important;
+              }
+            `}} />
+
+            {/* Background Gambar dengan Warna Asli */}
+            <div className="absolute inset-0 z-0">
+              <Image
+                src="/images/walpaper10.png"
+                alt="Background"
+                fill
+                priority
+                className="object-cover"
+              />
             </div>
 
-            {/* 5. Tombol Buka Undangan */}
-            <button
-              onClick={handleOpenInvitation}
-              className="mt-4 sm:mt-5 lg:mt-3 cursor-pointer rounded-full bg-[#9d7b46] px-10 py-2.5 md:px-12 md:py-3 lg:px-10 lg:py-2.5 text-xs sm:text-sm md:text-base lg:text-sm font-medium tracking-widest uppercase text-white transition-all duration-300 hover:scale-105 hover:bg-[#86642f] shadow-md hover:shadow-lg active:scale-95"
+            {/* 2. Bingkai Border Emas */}
+            <div className="absolute inset-4 sm:inset-6 md:inset-8 rounded-[24px] sm:rounded-[32px] md:rounded-[40px] border border-[#b28a4a]/40 z-10 pointer-events-none" />
+
+            {/* 3. Konten Utama */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="relative z-20 w-full max-w-sm mx-auto text-center flex flex-col items-center justify-center py-2 pb-12 sm:pb-16 md:pb-20 lg:pb-14 my-auto"
             >
-              Buka Undangan
-            </button>
-          </motion.div>
-        </section>
+              {/* "The Wedding Of" */}
+              <div className="mb-2 sm:mb-4 lg:mb-2 flex flex-col items-center justify-center text-center font-serif text-[16px] sm:text-[18px] md:text-[24px] lg:text-[18px] text-[#9d7b46] font-medium leading-[1.3] tracking-wide">
+                <span>The</span>
+                <span>Wedding</span>
+                <span>Of</span>
+              </div>
+
+              {/* Nama Pengantin - Menggunakan font-cursive-lokal dengan ukuran sedang (perkecil dikit) */}
+              <h2 className="font-cursive-lokal text-5xl sm:text-6xl md:text-7xl lg:text-6.5xl leading-[1.1] my-2 sm:my-4 w-full px-2 drop-shadow-sm select-none overflow-visible">
+                {/* Nama Erika */}
+                <span className="block capitalize efek-cahaya">
+                  Erika
+                </span>
+                
+                {/* Simbol & */}
+                <span className="font-serif block text-2xl sm:text-3xl md:text-4xl lg:text-3xl my-1 font-light text-[#9d7b46]">
+                  &
+                </span>
+                
+                {/* Nama Yogi */}
+                <span className="block capitalize efek-cahaya">
+                  Yogi
+                </span>
+              </h2>
+
+              {/* Garis Pembatas Halus */}
+              <div className="relative w-20 sm:w-24 md:w-32 lg:w-24 h-[1px] bg-gradient-to-r from-transparent via-[#b28a4a]/70 to-transparent my-2 sm:my-3 lg:my-2 flex items-center justify-center">
+                <div className="absolute w-1.5 h-1 bg-[#b28a4a]/80 rounded-full" />
+              </div>
+
+              {/* 4. Bagian Kepada Yth. & Nama Tamu */}
+              <div className="mt-2 sm:mt-3 lg:mt-2 mb-2 w-full px-4">
+                <p className="text-[12px] sm:text-[13px] md:text-[15px] lg:text-[13px] text-[#9d7b46] font-serif leading-relaxed">
+                  Kepada Yth.
+                </p>
+                <p className="text-[11px] sm:text-[12px] md:text-[14px] lg:text-[12px] text-[#9d7b46]/90 font-serif leading-relaxed">
+                  Bapak / Ibu / Saudara/i
+                </p>
+
+                {/* Nama Tamu */}
+                <h3 className="mt-2 font-serif text-2xl sm:text-3xl md:text-4xl lg:text-3xl font-bold text-[#695027] tracking-wide break-words max-w-full px-2 leading-tight">
+                  PutraSangaji
+                </h3>
+              </div>
+
+              {/* 5. Tombol Buka Undangan */}
+              <button
+                onClick={handleOpenInvitation}
+                className="mt-4 sm:mt-5 lg:mt-3 cursor-pointer rounded-full bg-[#9d7b46] px-10 py-2.5 md:px-12 md:py-3 lg:px-10 lg:py-2.5 text-xs sm:text-sm md:text-base lg:text-sm font-medium tracking-widest uppercase text-white transition-all duration-300 hover:scale-105 hover:bg-[#86642f] shadow-md hover:shadow-lg active:scale-95"
+              >
+                Buka Undangan
+              </button>
+            </motion.div>
+          </section>
         </div>
       </section>
 
